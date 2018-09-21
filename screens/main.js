@@ -11,6 +11,7 @@ import AddPhotosScreen from "./add_photos";
 import LikesScreen from "./likes";
 import UserScreen from "./user";
 import SearchScreen from "./search";
+import SearchUser from "./search_user";
 
 export default class MainScreen extends React.Component {
   // static navigationOptions = {
@@ -43,8 +44,13 @@ const HomeStack = createStackNavigator({
 
 const SearchStack = createStackNavigator({
   Search: SearchScreen,
-  Home: HomeScreen
-});
+  Home: HomeScreen,
+  SearchUser: SearchUser
+},{transitionConfig : () => ({
+  transitionSpec: {
+    duration: 0
+    },
+})});
 
 export const AppTabNavigator = createBottomTabNavigator(
   {
