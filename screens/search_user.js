@@ -8,18 +8,32 @@ class SearchUser extends Component {
   state = {
     isEndEditing: false,
     isLoading: false,
-    text: ""
+    data: []
   };
   componentDidMount() {
     x = this;
     // this.props.navigation.setParams({ doSomething: this.doSomething });
   }
   whatToDo = e => {
-    this.setState({ text: "Searching...", isEndEditing: true });
+    this.setState({
+      isEndEditing: true,
+      isLoading: true
+    });
     this.doSomething(e);
   };
-  doSomething = _.debounce(e => {
-    this.setState({ text: e });
+  doSomething = _.debounce(query => {
+    fetch(
+      `https://api.unsplash.com/search/users?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&query=${query}&per_page=10`
+    )
+      .then(response => response.json())
+      .then(responseJSON => {
+        this.setState({ data: responseJSON.results, isLoading: false }, () =>
+          console.log("DATA", this.state.data)
+        );
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, 600);
   static navigationOptions = () => {
     return {
@@ -45,7 +59,7 @@ class SearchUser extends Component {
         {!this.state.isEndEditing || this.state.text === "" ? (
           <Text style={{ alignSelf: "center" }}>Type something</Text>
         ) : (
-          <Text style={{ alignSelf: "center" }}>{this.state.text}</Text>
+          <SearchResult data={this.state} />
         )}
       </View>
     );

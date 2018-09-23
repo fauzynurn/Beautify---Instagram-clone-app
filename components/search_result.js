@@ -1,13 +1,17 @@
 import React, { Component } from "react";
-import { Text } from "react-native";
+import { Text, ScrollView } from "react-native";
+import SearchResultBP from "./search_result_bp";
 class SearchResult extends Component {
-  state = { isLoading: this.props.isLoading };
   render() {
-    return this.state.isLoading ? (
+    return this.props.data.isLoading ? (
       <Text style={{ alignSelf: "center" }}>Searching....</Text>
-    ) : (
-      <Text style={{ alignSelf: "center" }}>{this.props.text}</Text>
-    );
+    ) : this.props.data.data ? (
+      <ScrollView>
+        {this.props.data.data.map(item => {
+          return <SearchResultBP data={item} />;
+        })}
+      </ScrollView>
+    ) : null;
   }
 }
 
