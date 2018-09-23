@@ -55,7 +55,7 @@ class SearchUser extends Component {
   };
   render() {
     return (
-      <View style={{ backgroundColor: "white" }}>
+      <View style={{ width: "100%", height: "100%", backgroundColor: "white" }}>
         {!this.state.isEndEditing || this.state.text === "" ? (
           <Text style={{ alignSelf: "center" }}>Type something</Text>
         ) : (
