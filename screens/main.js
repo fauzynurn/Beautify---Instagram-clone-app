@@ -42,15 +42,20 @@ const HomeStack = createStackNavigator({
   Search: SearchScreen
 });
 
-const SearchStack = createStackNavigator({
-  Search: SearchScreen,
-  Home: HomeScreen,
-  SearchUser: SearchUser
-},{transitionConfig : () => ({
-  transitionSpec: {
-    duration: 0
-    },
-})});
+const SearchStack = createStackNavigator(
+  {
+    Search: SearchScreen,
+    Home: HomeScreen,
+    SearchUser: SearchUser
+  },
+  {
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 0
+      }
+    })
+  }
+);
 
 export const AppTabNavigator = createBottomTabNavigator(
   {
@@ -94,7 +99,7 @@ export const AppTabNavigator = createBottomTabNavigator(
           const image = focused
             ? require("../assets/images/heart_pressed.png")
             : require("../assets/images/heart.png");
-          return <Image style={{ width: 32, height: 33 }} source={image} />;
+          return <Image style={{ width: 30, height: 33 }} source={image} />;
         }
       }
     },
