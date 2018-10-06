@@ -13,10 +13,14 @@
     "react": "16.5.0",
     "react-devtools": "^3.3.4",
     "react-native": "0.57.0",
+    "react-native-fast-image": "^5.0.10",
     "react-native-nav-tabbar": "0.0.2",
     "react-native-read-more-text": "^1.1.0",
     "react-native-vector-icons": "^5.0.0",
-    "react-navigation": "^2.14.2"
+    "react-navigation": "^2.14.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-persist": "^5.10.0"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

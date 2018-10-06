@@ -1,14 +1,11 @@
-import React, { Component } from "react";
-import { Text, View, ScrollView, Image } from "react-native";
-import createStackNavigator from "react-navigation";
+import React from "react";
+import { Text, View, ScrollView, List, FlatList } from "react-native";
 import Feed from "../components/feed";
-import { Container, Left, Body, Right, Header, Title } from "native-base";
-import SearchScreen from "./search";
+import { connect } from "react-redux";
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   state = {
-    isFinishedFetching: false,
-    data: []
+    page: 1
   };
 
   static navigationOptions = () => {
@@ -31,14 +28,34 @@ export default class HomeScreen extends React.Component {
       }
     };
   };
+
+  getNextPage = () => {
+    this.setState({ page: this.state.page + 1 }, () => {
+      console.log("Before fetching:", this.props.data);
+      fetch(
+        `https://api.unsplash.com/photos/?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&page=${
+          this.state.page
+        }&per_page=10`
+      )
+        .then(response => response.json())
+        .then(responseJSON => {
+          this.props.appendData(responseJSON);
+          console.log("After fetching:", this.props.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    });
+  };
   componentDidMount() {
     fetch(
-      "https://api.unsplash.com/photos/?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&per_page=30"
+      "https://api.unsplash.com/photos/?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&page=1&per_page=10"
     )
       .then(response => response.json())
       .then(responseJSON => {
         console.log("Data fetched!");
-        this.setState({ data: responseJSON });
+        // console.log(this.props);
+        this.props.fetchNewData(responseJSON);
       })
       .catch(error => {
         console.log(error);
@@ -46,19 +63,33 @@ export default class HomeScreen extends React.Component {
   }
   render() {
     return (
-      <React.Fragment>
-        {this.state.data.length === 0 ? (
-          <Text>Waiting</Text>
-        ) : (
-          <View style={{ flex: 1, backgroundColor: "white" }}>
-            <ScrollView>
-              {this.state.data.map(x => {
-                return <Feed data={x} />;
-              })}
-            </ScrollView>
-          </View>
-        )}
-      </React.Fragment>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <FlatList
+          data={this.props.data}
+          renderItem={({ item }) => <Feed data={item} />}
+          onEndReached={this.getNextPage}
+          onEndReachedThreshold={3}
+        />
+      </View>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    data: state.feeds
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchNewData: newData =>
+      dispatch({ type: "FETCH_NEW_DATA", data: newData }),
+    appendData: newData =>
+      dispatch({ type: "APPEND_OLD_DATA", newItem: newData })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);

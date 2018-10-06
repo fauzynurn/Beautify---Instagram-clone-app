@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Text, View, Image, ScrollView } from "react-native";
+import { Text, View, Image } from "react-native";
+import FastImage from "react-native-fast-image";
 var moment = require("moment");
 class Feed extends Component {
   //   constructor() {
@@ -35,7 +36,7 @@ class Feed extends Component {
           </Text>
         </View>
         <View>
-          <Image
+          <FastImage
             source={{
               uri: this.props.data.urls.regular
             }}
