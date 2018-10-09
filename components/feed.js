@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, StyleSheet } from "react-native";
 import FastImage from "react-native-fast-image";
 var moment = require("moment");
 class Feed extends Component {
@@ -7,6 +7,12 @@ class Feed extends Component {
   //     super();
   //     console.log(this.props.data);
   //   }
+  state = {
+    isImageReady: false
+  };
+  loadImage = () => {
+    this.setState({ isImageReady: true });
+  };
   render() {
     return (
       <React.Fragment>
@@ -35,18 +41,17 @@ class Feed extends Component {
               : this.props.data.user.instagram_username}
           </Text>
         </View>
-        <View>
-          <FastImage
-            source={{
-              uri: this.props.data.urls.regular
-            }}
-            style={{
-              marginTop: 10,
-              width: "100%",
-              height: 350
-            }}
-          />
-        </View>
+        <FastImage
+          source={{
+            uri: this.props.data.urls.regular
+          }}
+          style={{
+            width: "100%",
+            marginTop: 10,
+            height: 350
+          }}
+          onLoad={e => console.log("WIDTH: ", e.nativeEvent.width)}
+        />
         <View style={{ marginLeft: 18, marginTop: 10 }}>
           <Text
             style={{

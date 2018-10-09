@@ -31,7 +31,6 @@ class HomeScreen extends React.Component {
 
   getNextPage = () => {
     this.setState({ page: this.state.page + 1 }, () => {
-      console.log("Before fetching:", this.props.data);
       fetch(
         `https://api.unsplash.com/photos/?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&page=${
           this.state.page
@@ -40,20 +39,20 @@ class HomeScreen extends React.Component {
         .then(response => response.json())
         .then(responseJSON => {
           this.props.appendData(responseJSON);
-          console.log("After fetching:", this.props.data);
         })
         .catch(error => {
           console.log(error);
         });
     });
   };
+  _keyExtractor = item => item.id;
+  renderFeed = ({ item }) => <Feed data={item} />;
   componentDidMount() {
     fetch(
       "https://api.unsplash.com/photos/?client_id=c6c70e2721dc619d0bb16869cbf4c7e594b90a4b9aed4c6caf64a8cf0bb3e3d1&page=1&per_page=10"
     )
       .then(response => response.json())
       .then(responseJSON => {
-        console.log("Data fetched!");
         // console.log(this.props);
         this.props.fetchNewData(responseJSON);
       })
@@ -66,9 +65,10 @@ class HomeScreen extends React.Component {
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <FlatList
           data={this.props.data}
-          renderItem={({ item }) => <Feed data={item} />}
+          keyExtractor={this._keyExtractor}
+          renderItem={this.renderFeed}
           onEndReached={this.getNextPage}
-          onEndReachedThreshold={3}
+          onEndReachedThreshold={0.25}
         />
       </View>
     );
